@@ -1,7 +1,7 @@
 %: %.c
 	gcc -o $@ -g $<
 
-all: clean test
+all: algo
 
 
 clean:
