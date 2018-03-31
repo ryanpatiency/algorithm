@@ -1,9 +1,20 @@
-%: %.c
-	gcc -o $@ -g $<
+OBJ := algo.o
+DEP := $(OBJ:%.o=.%.o.d)
+EXEC := $(OBJ:%.o=%)
 
-all: algo
-
-
-clean:
-	rm -f ./algo ./test
+algo: algo.o
+	gcc -o $@ $^
 	
+%.o: %.c
+	gcc -o $@ -c -MMD -MF .$@.d $<
+#
+#.PHONY: clean
+#
+clean:
+	rm $(OBJ)	
+#
+#include $(DEP)
+
+
+
+
