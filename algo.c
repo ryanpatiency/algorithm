@@ -27,6 +27,9 @@ int main()
 
     multiply_recursive(&a, &b, &c);
     for(int i = 0; i < 4; i++) {
-        printf("cdata[%d] is [%d]\n", i, cdata[i]);
+        printf("cdata[%d] is %d\t", i, cdata[i]);
+        if(i % a.size == a.size - 1) {
+            printf("\n");
+        }
     }
 }
