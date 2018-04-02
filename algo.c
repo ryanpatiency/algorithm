@@ -28,6 +28,5 @@ int main()
     multiply_recursive(&a, &b, &c);
     for(int i = 0; i < 4; i++) {
         printf("cdata[%d] is [%d]\n", i, cdata[i]);
-        printf("\n");
     }
 }

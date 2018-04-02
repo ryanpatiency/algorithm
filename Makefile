@@ -1,20 +1,15 @@
-OBJ := algo.o
-DEP := $(OBJ:%.o=.%.o.d)
-EXEC := $(OBJ:%.o=%)
+all: algo
 
-algo: algo.o
-	gcc -o $@ $^
-	
-%.o: %.c
-	gcc -o $@ -c -MMD -MF .$@.d $<
-#
-#.PHONY: clean
-#
+.d/algo.d: algo.c
+	gcc -MMD -MF .d/algo.d algo.c
+
+algo.o:  algo.c .d/algo.d
+	gcc -c -g -o $@ $<
+
+-include .d/algo.d
+
+.PHONY: clean
 clean:
-	rm $(OBJ)	
-#
-#include $(DEP)
-
-
-
-
+	rm -f algo
+	rm -f algo.o
+	rm -f .d/algo.d

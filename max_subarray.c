@@ -87,6 +87,7 @@ int max_subarray(int *a, int start, int end, int *lidx, int *ridx)
     int left_max = max_subarray(a, start, mid, &left_lidx, &left_ridx);
     int right_max = max_subarray(a, mid + 1, end, &right_lidx, &right_ridx);
 
+
     if(mid_max > left_max && mid_max > right_max) {
         *lidx = mid_lidx;
         *ridx = mid_ridx;
@@ -100,5 +101,4 @@ int max_subarray(int *a, int start, int end, int *lidx, int *ridx)
         *ridx = right_ridx;
         return right_max;
     }
-
 }

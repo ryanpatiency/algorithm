@@ -33,9 +33,10 @@ void multiply_recursive(matrix_t *a, matrix_t *b, matrix_t *c)
         for(int col = 0; col < 2; col++) {
             _c[row][col].size = _b[row][col].size = _a[row][col].size
                     = subsize;
-            _a[row][col].data = a->data + row * size * subsize;
-            _b[row][col].data = b->data + row * size * subsize;
-            _c[row][col].data = c->data + row * size * subsize;
+            int offset = row * size * subsize + col;
+            _a[row][col].data = a->data + offset;
+            _b[row][col].data = b->data + offset;
+            _c[row][col].data = c->data + offset;
         }
     }
     for(int row = 0; row < 2; row++) {
@@ -45,8 +46,5 @@ void multiply_recursive(matrix_t *a, matrix_t *b, matrix_t *c)
             }
         }
     }
-
-
-
 
 }
