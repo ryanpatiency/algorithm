@@ -6,8 +6,14 @@ struct heap {
 
 #define left(i) (2*(i))
 #define right(i) (2*(i)+1)
+#define parent(i) (2/(i))
 
-
+void swap(struct heap *mheap, int i, int j)
+{
+	int tmp = mheap->data[i];
+	mheap->data[i] = mheap->data[j];
+	mheap->data[j] = tmp;
+}
 
 void max_heapify(struct heap *mheap, int i)
 {
@@ -32,9 +38,7 @@ void max_heapify(struct heap *mheap, int i)
 		maxidx = right(i);
 	}
 	if(maxidx != i) {
-		int tmp = mheap->data[i];
-		mheap->data[i] = mheap->data[maxidx];
-		mheap->data[maxidx] = tmp;
+		swap(mheap, maxidx, i);
 		max_heapify(mheap, maxidx);
 	}
 }
@@ -44,7 +48,7 @@ void build_maxheap(struct heap *mheap)
 	/*
 	 * 	maintain the heap by let the n/2 to 1's node to be a max heap
 	 */
-	mheap->heapsize = mheap->arraysize;
+	mheap->heapsize = mheap->arraysize - 1;
 	for(int i = mheap->heapsize / 2; i > 0; i--) {
 		max_heapify(mheap, i);
 	}
@@ -105,6 +109,7 @@ void __heap_sort(struct heap *mheap)
 		max_heapify(mheap, 1);
 	}
 }
+
 void heap_sort(int *a, int size)
 {
 	struct heap mheap;
@@ -112,5 +117,56 @@ void heap_sort(int *a, int size)
 	mheap.data = a;
 	build_maxheap(&mheap);
 	__heap_sort(&mheap);
+}
+
+/*
+ *  priority queue: with these functions:
+ *  - build priority queue
+ *  - get_max(struct heap *mheap);
+ *  - extract_max(struct heap *mheap);
+ *  - change_key(struct heap *mheap, int idx, int newvalue);
+ *  - insert(struct heap *mheap, int data);
+ *
+ */
+void build_priority_queue(struct heap *mheap, int *data, int size)
+{
+	mheap->arraysize = size;
+	mheap->data = data;
+	mheap->heapsize = 0;
+}
+
+int get_max(struct heap *mheap)
+{
+	return mheap->data[1];
+}
+int extract_max(struct heap *mheap)
+{
+	int max = get_max(mheap);
+	mheap->data[1] = mheap->data[mheap->heapsize];
+	mheap->heapsize--;
+	max_heapify(mheap, 1);
+	return max;
+
+}
+void change_key(struct heap *mheap, int idx, int newvalue)
+{
+	/*
+	 * 	change the heap[idx] to its new value, and do the following:
+	 *
+	 * 	if heap[idx] is bigger than its parent, than swap heap and its parent
+	 * 	until it has no parent, idx == 1
+	 */
+	mheap->data[idx] = newvalue;
+	max_heapify(mheap, idx);
+	while(idx > 1 && mheap->data[idx] > mheap->data[parent(idx)]) {
+		swap(mheap, idx, parent(idx));
+		idx = parent(idx);
+	}
+}
+void insert(struct heap *mheap, int data)
+{
+	mheap->heapsize++;
+	mheap->data[mheap->heapsize] = data;
+	change_key(mheap, mheap->heapsize, data);
 }
 

@@ -19,15 +19,62 @@ void rand_array(int *a, int size);
 void analyze_matrix(void);
 void analyze_sort(void);
 void test_sort(void);
-void print_array(int *a, int size);
+void print_array(int *a, int start, int size);
+void test_priority_queue(void);
 
 int main()
 {
 //	test_matrix();
 //	analyze_matrix();
 //	test_sort();
-	analyze_sort();
+//	analyze_sort();
+	test_priority_queue();
 }
+void test_priority_queue(void)
+{
+	struct heap mheap;
+	int *array = malloc(sizeof(int) * SIZE);
+	build_priority_queue(&mheap, array, SIZE);
+	char input = 0;
+	int data;
+	while(input != 'q') {
+		printf("\n"
+		       "chose the following:\n"
+		       "q: quit\n"
+		       "i: insert\n"
+		       "m: getmax\n"
+		       "e: extract max\n"
+		       "c: change key\n");
+		scanf("%c", &input);
+		switch(input) {
+		case 'q':
+			break;
+		case 'i':
+			printf("please give a data: ");
+			scanf("%d", &data);
+			insert(&mheap, data);
+			break;
+		case 'c':
+			printf("please give a data: ");
+			scanf("%d", &data);
+			change_key(&mheap, 1, data);
+			break;
+		case 'm':
+			printf("the max is %d\n", get_max(&mheap));
+			break;
+		case 'e':
+			printf("the max is %d\n", extract_max(&mheap));
+			break;
+		default:
+			printf("error reading input\n");
+			break;
+		}
+		printf("new array is:\n");
+		print_array(array, 1, mheap.heapsize + 1);
+	}
+	free(array);
+}
+
 
 void analyze_matrix(void)
 {
@@ -125,9 +172,9 @@ void rand_array(int *a, int size)
 		a[i] = (rand() % MAX);
 	}
 }
-void print_array(int *a, int size)
+void print_array(int *a, int start, int size)
 {
-	for(int i = 0; i < size; i++) {
+	for(int i = start; i < size; i++) {
 		printf("%d ", a[i]);
 	}
 	printf("\n");
@@ -136,8 +183,8 @@ void test_sort(void)
 {
 	int *a = malloc(SIZE * sizeof(int));
 	rand_array(a, SIZE);
-	print_array(a, SIZE);
+	print_array(a, 0, SIZE);
 	heap_sort(a, SIZE);
-	print_array(a, SIZE);
+	print_array(a, 0, SIZE);
 	free(a);
 }
