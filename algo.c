@@ -9,18 +9,21 @@
 #include "matrix/multiply_recursive.c"
 #include "matrix/strassen.c"
 #include "matrix/matrix.c"
+#include "datastructure/heap.c"
 
-
-#define SIZE 550
+#define SIZE 10
+#define MAX 30
 
 void test_matrix(void);
 void rand_array(int *a, int size);
 void analyze_matrix(void);
+void test_sort(void);
 
 int main()
 {
 //	test_matrix();
-	analyze_matrix();
+//	analyze_matrix();
+	test_sort();
 }
 
 void analyze_matrix(void)
@@ -81,7 +84,29 @@ void rand_array(int *a, int size)
 {
 	time_t t;
 	srand(time(&t));
-	for(int i = 0; i < size; ++i) {
-		a[i] = rand();
+	for(int i = 0; i < size; i++) {
+		a[i] = (rand() % MAX);
 	}
+}
+void print_array(int *a, int size)
+{
+	for(int i = 0; i < size; i++) {
+		printf("a[%d] : %d\n", i, a[i]);
+	}
+}
+void test_sort(void)
+{
+	int *a = malloc(SIZE);
+	rand_array(a, SIZE);
+	print_array(a, SIZE);
+	struct heap mheap;
+	mheap.arraysize = SIZE;
+	mheap.data = a;
+	build_maxheap(&mheap);
+	heap_sort(&mheap);
+	for(int i = 1; i < SIZE; i++) {
+		printf("%d ", mheap.data[i]);
+	}
+	printf("\n");
+	free(a);
 }
