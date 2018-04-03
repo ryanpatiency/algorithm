@@ -15,7 +15,7 @@
  */
 
 #include <stdlib.h>
-//#include "matrix.c"
+#include "matrix.h"
 
 
 
