@@ -1,15 +1,15 @@
-void basic_multiply(int *a, int *b, int *c, int size)
+void basic_multiply(int *a, int *b, int *c, int len)
 {
-	int *_c = malloc(sizeof(int) * size * size);
-	for(int row = 0; row < size; row++) {
-		for(int col = 0; col < size; col++) {
-			for(int k = 0; k < size; k++) {
-				*(_c + row * size + col) = *(a + row * size + k)
-				        * (*(b + k * size + col));
+	int *_c = calloc(sizeof(int), len * len);
+	for(int row = 0; row < len; row++) {
+		for(int col = 0; col < len; col++) {
+			for(int k = 0; k < len; k++) {
+				*(_c + row * len + col) += *(a + row * len + k)
+				        * (*(b + k * len + col));
 			}
 		}
 	}
-	for(int i = 0; i < size * size; i++) {
+	for(int i = 0; i < len * len; i++) {
 		c[i] = _c[i];
 	}
 	free(_c);

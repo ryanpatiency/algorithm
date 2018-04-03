@@ -1,5 +1,5 @@
 #include <stdlib.h>
-void copy_to_sub(int *sub, int *parrent, int origsize, int subsize)
+static void copy_to_sub(int *sub, int *parrent, int origsize, int subsize)
 {
     for(int row = 0; row < subsize; row++) {
         for(int col = 0; col < subsize; col++) {
@@ -8,7 +8,7 @@ void copy_to_sub(int *sub, int *parrent, int origsize, int subsize)
     }
 }
 
-void sub(int *a, int *b, int *c, int size)
+static void sub(int *a, int *b, int *c, int size)
 {
     for(int row = 0; row < size; row++) {
         for(int col = 0; col < size; col++) {
@@ -18,7 +18,7 @@ void sub(int *a, int *b, int *c, int size)
         }
     }
 }
-void add(int *a, int *b, int *c, int size)
+static void add(int *a, int *b, int *c, int size)
 {
     for(int row = 0; row < size; row++) {
         for(int col = 0; col < size; col++) {

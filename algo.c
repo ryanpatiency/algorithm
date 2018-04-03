@@ -32,7 +32,7 @@ void analyze(void)
 
 		rand_array(a[i], 1 << i);
 		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts1);
-		basic_multiply(a[i], a[i], 1 << i);
+//		basic_multiply(a[i], a[i], 1 << i);
 		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts2);
 		assert(ts1.tv_sec == ts2.tv_sec);
 
@@ -49,8 +49,24 @@ void analyze(void)
 		free(a[i]);
 	}
 }
+void test_matrix(void)
+{
+	int a[] = {
+	        1, 2, 3, 4,
+	        2, 2, 3, 4,
+	        3, 2, 3, 4,
+	        4, 2, 3, 4
+	};
+	strassen(a, a, a, 4);
+	for(int i = 0; i < 16; i++) {
+		printf("a[%d] is %d", i, a[i]);
+		if(i % 4 == 3) {
+			printf("\n");
+		}
+	}
+}
 
 int main()
 {
-	analyze();
+	test_matrix();
 }
