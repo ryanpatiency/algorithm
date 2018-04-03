@@ -86,19 +86,13 @@ void rand_array(int *a, int size)
 	srand(time(&t));
 	for(int i = 0; i < size; i++) {
 		a[i] = (rand() % MAX);
-	}
-}
-void print_array(int *a, int size)
-{
-	for(int i = 0; i < size; i++) {
 		printf("a[%d] : %d\n", i, a[i]);
 	}
 }
 void test_sort(void)
 {
-	int *a = malloc(SIZE);
+	int *a = malloc(SIZE * sizeof(int));
 	rand_array(a, SIZE);
-	print_array(a, SIZE);
 	struct heap mheap;
 	mheap.arraysize = SIZE;
 	mheap.data = a;
