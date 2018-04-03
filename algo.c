@@ -11,19 +11,22 @@
 #include "matrix/matrix.c"
 #include "datastructure/heap.c"
 
-#define SIZE 10
+#define SIZE 20
 #define MAX 30
 
 void test_matrix(void);
 void rand_array(int *a, int size);
 void analyze_matrix(void);
+void analyze_sort(void);
 void test_sort(void);
+void print_array(int *a, int size);
 
 int main()
 {
 //	test_matrix();
 //	analyze_matrix();
-	test_sort();
+//	test_sort();
+	analyze_sort();
 }
 
 void analyze_matrix(void)
@@ -64,6 +67,40 @@ void analyze_matrix(void)
 		free(a[i]);
 	}
 }
+void analyze_sort(void)
+{
+	struct timespec ts1, ts2;
+	int *a[SIZE];
+	printf("input\tmerge\theap\n");
+	for(int i = 0; i < SIZE; i++) {
+		int array_size = 1 << i;
+		a[i] = malloc(sizeof(int) * array_size);
+		printf("%d\t", array_size);
+
+//		rand_array(a[i], array_size);
+//		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts1);
+//		insert_sort(a[i], array_size);
+//		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts2);
+//		assert(ts1.tv_sec == ts2.tv_sec);
+//		printf("%ld\t", ts2.tv_nsec - ts1.tv_nsec);
+
+		rand_array(a[i], array_size);
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts1);
+		merge_sort(a[i], array_size);
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts2);
+		assert(ts1.tv_sec == ts2.tv_sec);
+		printf("%ld\t", ts2.tv_nsec - ts1.tv_nsec);
+		rand_array(a[i], array_size);
+
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts1);
+		heap_sort(a[i], array_size);
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts2);
+		assert(ts1.tv_sec == ts2.tv_sec);
+		printf("%ld\n", ts2.tv_nsec - ts1.tv_nsec);
+
+		free(a[i]);
+	}
+}
 void test_matrix(void)
 {
 	int a[] = {
@@ -86,21 +123,21 @@ void rand_array(int *a, int size)
 	srand(time(&t));
 	for(int i = 0; i < size; i++) {
 		a[i] = (rand() % MAX);
-		printf("a[%d] : %d\n", i, a[i]);
 	}
+}
+void print_array(int *a, int size)
+{
+	for(int i = 0; i < size; i++) {
+		printf("%d ", a[i]);
+	}
+	printf("\n");
 }
 void test_sort(void)
 {
 	int *a = malloc(SIZE * sizeof(int));
 	rand_array(a, SIZE);
-	struct heap mheap;
-	mheap.arraysize = SIZE;
-	mheap.data = a;
-	build_maxheap(&mheap);
-	heap_sort(&mheap);
-	for(int i = 1; i < SIZE; i++) {
-		printf("%d ", mheap.data[i]);
-	}
-	printf("\n");
+	print_array(a, SIZE);
+	heap_sort(a, SIZE);
+	print_array(a, SIZE);
 	free(a);
 }

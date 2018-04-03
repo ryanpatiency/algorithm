@@ -91,7 +91,7 @@ void build_minheap(struct heap *mheap)
 		min_heapify(mheap, i);
 	}
 }
-void heap_sort(struct heap *mheap)
+void __heap_sort(struct heap *mheap)
 {
 	/*
 	 *  swap the root of a max heap's head with its tail
@@ -104,5 +104,13 @@ void heap_sort(struct heap *mheap)
 		mheap->heapsize--;
 		max_heapify(mheap, 1);
 	}
+}
+void heap_sort(int *a, int size)
+{
+	struct heap mheap;
+	mheap.arraysize = size;
+	mheap.data = a;
+	build_maxheap(&mheap);
+	__heap_sort(&mheap);
 }
 
