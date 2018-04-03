@@ -5,6 +5,9 @@
 #include <assert.h>
 #include "sort/merge_sort.c"
 #include "sort/insert_sort.c"
+#include "matrix/basic_multiply.c"
+#include "matrix/multiply_recursive.c"
+#include "matrix/strassen.c"
 
 #define SIZE 15
 
@@ -21,7 +24,7 @@ void analyze(void)
 {
 	struct timespec ts1, ts2;
 	int *a[SIZE];
-	printf("input_size\tmerge_time\tinset_time\n");
+	printf("input_size\tbasic multiply\trecursive\tstrassen\n");
 	for(int i = 0; i < SIZE; i++) {
 		a[i] = malloc(sizeof(int) * 1 << i);
 
@@ -29,7 +32,7 @@ void analyze(void)
 
 		rand_array(a[i], 1 << i);
 		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts1);
-		merge_sort(a[i], 1 << i);
+		basic_multiply(a[i], a[i], 1 << i);
 		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts2);
 		assert(ts1.tv_sec == ts2.tv_sec);
 
