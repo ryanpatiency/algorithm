@@ -1,35 +1,53 @@
 #include <stdio.h>
-#include "matrix/multiply_recursive.c"
+#include <stdlib.h>
+#include <sys/time.h>
+#include <time.h>
+#include <assert.h>
+#include "sort/merge_sort.c"
+#include "sort/insert_sort.c"
+
+#define SIZE 15
+
+void rand_array(int *a, int size)
+{
+	time_t t;
+	srand(time(&t));
+	for(int i = 0; i < size; ++i) {
+		a[i] = rand();
+	}
+}
+
+void analyze(void)
+{
+	struct timespec ts1, ts2;
+	int *a[SIZE];
+	printf("input_size\tmerge_time\tinset_time\n");
+	for(int i = 0; i < SIZE; i++) {
+		a[i] = malloc(sizeof(int) * 1 << i);
+
+		printf("%d\t", 1 << i);
+
+		rand_array(a[i], 1 << i);
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts1);
+		merge_sort(a[i], 1 << i);
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts2);
+		assert(ts1.tv_sec == ts2.tv_sec);
+
+		printf("%ld\t", ts2.tv_nsec - ts1.tv_nsec);
+
+		rand_array(a[i], 1 << i);
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts1);
+		insert_sort(a[i], 1 << i);
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts2);
+		assert(ts1.tv_sec == ts2.tv_sec);
+
+		printf("%ld\n", ts2.tv_nsec - ts1.tv_nsec);
+
+		free(a[i]);
+	}
+}
 
 int main()
 {
-    matrix_t a, b, c;
-
-    a.size = b.size = c.size = 2;
-
-    int adata[] = {
-        1, 2,
-        3, 4
-    };
-    a.data = adata;
-
-    int bdata[] = {
-            2, 0,
-            1, 2
-    };
-    b.data = bdata;
-
-    int cdata[] = {
-            0, 0,
-            0, 0
-    };
-    c.data = cdata;
-
-    multiply_recursive(&a, &b, &c);
-    for(int i = 0; i < 4; i++) {
-        printf("cdata[%d] is %d\t", i, cdata[i]);
-        if(i % a.size == a.size - 1) {
-            printf("\n");
-        }
-    }
+	analyze();
 }
