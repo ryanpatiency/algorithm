@@ -6,9 +6,9 @@ struct heap {
 
 #define left(i) (2*(i))
 #define right(i) (2*(i)+1)
-#define parent(i) (2/(i))
+#define parent(i) ((i)/2)
 
-void swap(struct heap *mheap, int i, int j)
+void swap_heap(struct heap *mheap, int i, int j)
 {
 	int tmp = mheap->data[i];
 	mheap->data[i] = mheap->data[j];
@@ -38,7 +38,7 @@ void max_heapify(struct heap *mheap, int i)
 		maxidx = right(i);
 	}
 	if(maxidx != i) {
-		swap(mheap, maxidx, i);
+		swap_heap(mheap, maxidx, i);
 		max_heapify(mheap, maxidx);
 	}
 }
@@ -159,14 +159,13 @@ void change_key(struct heap *mheap, int idx, int newvalue)
 	mheap->data[idx] = newvalue;
 	max_heapify(mheap, idx);
 	while(idx > 1 && mheap->data[idx] > mheap->data[parent(idx)]) {
-		swap(mheap, idx, parent(idx));
+		swap_heap(mheap, idx, parent(idx));
 		idx = parent(idx);
 	}
 }
 void insert(struct heap *mheap, int data)
 {
 	mheap->heapsize++;
-	mheap->data[mheap->heapsize] = data;
 	change_key(mheap, mheap->heapsize, data);
 }
 

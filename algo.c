@@ -5,6 +5,7 @@
 #include <assert.h>
 #include "sort/merge_sort.c"
 #include "sort/insert_sort.c"
+#include "sort/qsort.c"
 #include "matrix/basic_multiply.c"
 #include "matrix/multiply_recursive.c"
 #include "matrix/strassen.c"
@@ -26,15 +27,18 @@ int main()
 {
 //	test_matrix();
 //	analyze_matrix();
-//	test_sort();
+	test_sort();
 //	analyze_sort();
-	test_priority_queue();
+//	test_priority_queue();
 }
 void test_priority_queue(void)
 {
 	struct heap mheap;
 	int *array = malloc(sizeof(int) * SIZE);
 	build_priority_queue(&mheap, array, SIZE);
+	insert(&mheap, -7);
+	insert(&mheap, -123);
+	insert(&mheap, -7);
 	char input = 0;
 	int data;
 	while(input != 'q') {
@@ -45,17 +49,17 @@ void test_priority_queue(void)
 		       "m: getmax\n"
 		       "e: extract max\n"
 		       "c: change key\n");
-		scanf("%c", &input);
+		scanf(" %c", &input);
 		switch(input) {
 		case 'q':
 			break;
 		case 'i':
-			printf("please give a data: ");
+			printf("please give a integer: ");
 			scanf("%d", &data);
 			insert(&mheap, data);
 			break;
 		case 'c':
-			printf("please give a data: ");
+			printf("please give a integer: ");
 			scanf("%d", &data);
 			change_key(&mheap, 1, data);
 			break;
@@ -74,7 +78,6 @@ void test_priority_queue(void)
 	}
 	free(array);
 }
-
 
 void analyze_matrix(void)
 {
@@ -184,7 +187,7 @@ void test_sort(void)
 	int *a = malloc(SIZE * sizeof(int));
 	rand_array(a, SIZE);
 	print_array(a, 0, SIZE);
-	heap_sort(a, SIZE);
+	qsort(a, 0, SIZE);
 	print_array(a, 0, SIZE);
 	free(a);
 }
