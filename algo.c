@@ -5,14 +5,14 @@
 #include <assert.h>
 #include "sort/merge_sort.c"
 #include "sort/insert_sort.c"
-#include "sort/qsort.c"
 #include "matrix/basic_multiply.c"
 #include "matrix/multiply_recursive.c"
 #include "matrix/strassen.c"
 #include "matrix/matrix.c"
 #include "datastructure/heap.c"
+#include "sort/quick_sort.c"
 
-#define SIZE 20
+#define SIZE 18
 #define MAX 30
 
 void test_matrix(void);
@@ -27,9 +27,81 @@ int main()
 {
 //	test_matrix();
 //	analyze_matrix();
-	test_sort();
-//	analyze_sort();
+//	test_sort();
+	analyze_sort();
 //	test_priority_queue();
+}
+
+void analyze_sort(void)
+{
+	struct timespec ts1, ts2;
+	int *a[SIZE];
+
+	printf("input\tqsort\tqsort2\n");
+
+	for(int i = 0; i < SIZE; i++) {
+		int array_size = 1 << i;
+		long diff;
+		a[i] = malloc(sizeof(int) * array_size);
+		printf("%d\t", array_size);
+
+		rand_array(a[i], array_size);
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts1);
+		quick_sort(a[i], array_size);
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts2);
+		diff = 1000000000 * (ts2.tv_sec - ts1.tv_sec)
+		        + (ts2.tv_nsec - ts1.tv_nsec);
+		printf("%ld\t", diff);
+
+		rand_array(a[i], array_size);
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts1);
+		quick_sort2(a[i], array_size);
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts2);
+		diff = 1000000000 * (ts2.tv_sec - ts1.tv_sec)
+		        + (ts2.tv_nsec - ts1.tv_nsec);
+		printf("%ld\n", diff);
+
+
+		free(a[i]);
+	}
+}
+void analyze_matrix(void)
+{
+	struct timespec ts1, ts2;
+	int *a[SIZE];
+	printf("input_size\tbasic multiply\trecursive\tstrassen\n");
+	for(int i = 500; i < SIZE; i++) {
+		int array_size = i * i;
+		int matrix_len = i;
+		a[i] = malloc(sizeof(int) * array_size);
+		printf("%d\t", matrix_len);
+
+		rand_array(a[i], array_size);
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts1);
+		basic_multiply(a[i], a[i], a[i], matrix_len);
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts2);
+//		assert(ts1.tv_sec == ts2.tv_sec);
+//		printf("%ld\t", ts2.tv_nsec - ts1.tv_nsec);
+		printf("%ld\t", ts2.tv_sec - ts1.tv_sec);
+
+		rand_array(a[i], array_size);
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts1);
+		multiply_recursive(a[i], a[i], a[i], matrix_len);
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts2);
+//		assert(ts1.tv_sec == ts2.tv_sec);
+//		printf("%ld\t", ts2.tv_nsec - ts1.tv_nsec);
+		printf("%ld\t", ts2.tv_sec - ts1.tv_sec);
+
+		rand_array(a[i], array_size);
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts1);
+		strassen(a[i], a[i], a[i], matrix_len);
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts2);
+//		assert(ts1.tv_sec == ts2.tv_sec);
+//		printf("%ld\n", ts2.tv_nsec - ts1.tv_nsec);
+		printf("%ld\n", ts2.tv_sec - ts1.tv_sec);
+
+		free(a[i]);
+	}
 }
 void test_priority_queue(void)
 {
@@ -79,78 +151,7 @@ void test_priority_queue(void)
 	free(array);
 }
 
-void analyze_matrix(void)
-{
-	struct timespec ts1, ts2;
-	int *a[SIZE];
-	printf("input_size\tbasic multiply\trecursive\tstrassen\n");
-	for(int i = 500; i < SIZE; i++) {
-		int array_size = i * i;
-		int matrix_len = i;
-		a[i] = malloc(sizeof(int) * array_size);
-		printf("%d\t", matrix_len);
 
-		rand_array(a[i], array_size);
-		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts1);
-		basic_multiply(a[i], a[i], a[i], matrix_len);
-		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts2);
-//		assert(ts1.tv_sec == ts2.tv_sec);
-//		printf("%ld\t", ts2.tv_nsec - ts1.tv_nsec);
-		printf("%ld\t", ts2.tv_sec - ts1.tv_sec);
-
-		rand_array(a[i], array_size);
-		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts1);
-		multiply_recursive(a[i], a[i], a[i], matrix_len);
-		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts2);
-//		assert(ts1.tv_sec == ts2.tv_sec);
-//		printf("%ld\t", ts2.tv_nsec - ts1.tv_nsec);
-		printf("%ld\t", ts2.tv_sec - ts1.tv_sec);
-
-		rand_array(a[i], array_size);
-		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts1);
-		strassen(a[i], a[i], a[i], matrix_len);
-		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts2);
-//		assert(ts1.tv_sec == ts2.tv_sec);
-//		printf("%ld\n", ts2.tv_nsec - ts1.tv_nsec);
-		printf("%ld\n", ts2.tv_sec - ts1.tv_sec);
-
-		free(a[i]);
-	}
-}
-void analyze_sort(void)
-{
-	struct timespec ts1, ts2;
-	int *a[SIZE];
-	printf("input\tmerge\theap\n");
-	for(int i = 0; i < SIZE; i++) {
-		int array_size = 1 << i;
-		a[i] = malloc(sizeof(int) * array_size);
-		printf("%d\t", array_size);
-
-//		rand_array(a[i], array_size);
-//		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts1);
-//		insert_sort(a[i], array_size);
-//		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts2);
-//		assert(ts1.tv_sec == ts2.tv_sec);
-//		printf("%ld\t", ts2.tv_nsec - ts1.tv_nsec);
-
-		rand_array(a[i], array_size);
-		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts1);
-		merge_sort(a[i], array_size);
-		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts2);
-		assert(ts1.tv_sec == ts2.tv_sec);
-		printf("%ld\t", ts2.tv_nsec - ts1.tv_nsec);
-		rand_array(a[i], array_size);
-
-		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts1);
-		heap_sort(a[i], array_size);
-		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts2);
-		assert(ts1.tv_sec == ts2.tv_sec);
-		printf("%ld\n", ts2.tv_nsec - ts1.tv_nsec);
-
-		free(a[i]);
-	}
-}
 void test_matrix(void)
 {
 	int a[] = {
@@ -187,7 +188,7 @@ void test_sort(void)
 	int *a = malloc(SIZE * sizeof(int));
 	rand_array(a, SIZE);
 	print_array(a, 0, SIZE);
-	qsort(a, 0, SIZE);
+	quick_sort(a, SIZE);
 	print_array(a, 0, SIZE);
 	free(a);
 }
