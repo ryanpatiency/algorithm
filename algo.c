@@ -4,15 +4,15 @@
 #include <time.h>
 
 #include "datastructure/heap.c"
+#include "datastructure/list.h"
 #include "matrix/basic_multiply.c"
 #include "matrix/multiply_recursive.c"
 #include "matrix/strassen.c"
 #include "matrix/matrix.c"
+#include "sort/sort.h"
+#include "sort/redix_sort.c"
 #include "sort/quick_sort.c"
 #include "sort/counting_sort.c"
-
-#define SIZE 19
-#define MAX (1 << SIZE)
 
 void test_matrix(void);
 void rand_array(int *a, int size);
@@ -21,6 +21,10 @@ void analyze_sort(void);
 void test_sort(void);
 void print_array(int *a, int start, int size);
 void test_priority_queue(void);
+
+#define SIZE 20
+//#define MAX 90
+//#define NOTRAND
 
 int main()
 {
@@ -36,7 +40,7 @@ void analyze_sort(void)
     struct timespec ts1, ts2;
     int *a[SIZE];
 
-    printf("input\tqsort\tcounting_sort\n");
+    printf("input\tqsort\tredix_sort\n");
 
     for (int i = 0; i < SIZE; i++) {
         int array_size = 1 << i;
@@ -54,7 +58,7 @@ void analyze_sort(void)
 
         rand_array(a[i], array_size);
         clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts1);
-        counting_sort(a[i], array_size, MAX);
+        redix_sort(a[i], array_size);
         clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts2);
         diff = 1000000000 * (ts2.tv_sec - ts1.tv_sec) +
                (ts2.tv_nsec - ts1.tv_nsec);
@@ -177,8 +181,11 @@ void rand_array(int *a, int size)
     time_t t;
     srand(time(&t));
     for (int i = 0; i < size; i++) {
+#ifdef MAX
         a[i] = (rand() % (MAX + 1));
-        //        a[i] = rand();
+#else
+        a[i] = rand();
+#endif
     }
 }
 void print_array(int *a, int start, int size)
@@ -191,9 +198,16 @@ void print_array(int *a, int start, int size)
 void test_sort(void)
 {
     int *a = malloc(SIZE * sizeof(int));
+#ifdef NOTRAND
+    a[0] = 9;
+    a[1] = 3;
+    a[2] = 2;
+    a[3] = 3;
+#else
     rand_array(a, SIZE);
+#endif
     print_array(a, 0, SIZE);
-    counting_sort(a, SIZE, MAX);
+    redix_sort(a, SIZE);
     print_array(a, 0, SIZE);
     free(a);
 }

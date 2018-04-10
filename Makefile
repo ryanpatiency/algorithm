@@ -1,8 +1,7 @@
 all: algo
 
-
 .d/algo.d: algo.c
-	gcc -MMD -MF .d/algo.d algo.c
+	gcc -MMD -MF .d/algo.d algo.c -lm
 
 optalgo: 
 	gcc -g -O3 -o $@ algo.c
@@ -10,6 +9,9 @@ optalgo:
 algo.o:  algo.c .d/algo.d
 	gcc -c -g -o $@ $<
 
+algo: algo.o
+	gcc -o algo algo.o -lm
+	
 -include .d/algo.d
 
 .PHONY: clean

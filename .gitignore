@@ -4,3 +4,5 @@ algo.d
 algo.o
 run_time.dat
 algo
+.d/
+picture/
